@@ -1,19 +1,31 @@
+# Render configuration for two services: backend (Node) and frontend (static)
 services:
   - type: web
     name: west-backend
     env: node
     branch: main
     dir: backend
+    plan: free
     buildCommand: npm ci && npm run build
     startCommand: npm start
+    # Add env vars below in Render dashboard or convert to secrets here.
+    # envVars:
+    #   - key: DATABASE_URL
+    #     value: $DATABASE_URL
+    #   - key: NODE_ENV
+    #     value: production
 
   - type: static
     name: west-frontend
     branch: main
     dir: frontend
+    plan: free
     buildCommand: npm ci && npm run build
+    # Adjust the publish path after running your frontend build
     staticPublishPath: client/dist
 
-# Notes:
-# - Verify `buildCommand` and `staticPublishPath` against `frontend/package.json`.
-# - Add environment variables on Render dashboard or via `render.yaml` secrets.
+# TODO:
+# - Replace `buildCommand` and `staticPublishPath` with values from
+#   `frontend/package.json` (e.g., `npm run build` output directory).
+# - Add secrets on Render dashboard (Database URLs, API keys, etc.) or
+#   encrypt them into this file using Render's secrets syntax if desired.
