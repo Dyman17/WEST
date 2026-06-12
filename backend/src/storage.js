@@ -215,39 +215,44 @@ async function loadFromPostgres() {
   const client = getPool();
   if (!client) return buildSeedStore();
 
-  const [{ rows: userRows }, { rows: driverRows }, { rows: freightRows }, { rows: portRows }, { rows: bookingRows }, { rows: lessonRows }, { rows: trajectoryRows }, { rows: ruleRows }, { rows: promptRows }, { rows: analysisRows }, { rows: decisionRows }] = await Promise.all([
-    client.query("SELECT * FROM users ORDER BY created_at ASC"),
-    client.query("SELECT * FROM drivers ORDER BY score DESC"),
-    client.query("SELECT * FROM freights ORDER BY priority DESC"),
-    client.query("SELECT * FROM ports ORDER BY id ASC"),
-    client.query("SELECT * FROM bookings ORDER BY created_at ASC"),
-    client.query("SELECT * FROM lessons ORDER BY stage ASC"),
-    client.query("SELECT * FROM trajectories ORDER BY id ASC"),
-    client.query("SELECT * FROM rating_rules ORDER BY key ASC"),
-    client.query("SELECT * FROM ai_prompts ORDER BY key ASC"),
-    client.query("SELECT * FROM ai_analyses ORDER BY created_at DESC"),
-    client.query("SELECT * FROM freight_decisions ORDER BY created_at ASC"),
-  ]);
+  try {
+    const [{ rows: userRows }, { rows: driverRows }, { rows: freightRows }, { rows: portRows }, { rows: bookingRows }, { rows: lessonRows }, { rows: trajectoryRows }, { rows: ruleRows }, { rows: promptRows }, { rows: analysisRows }, { rows: decisionRows }] = await Promise.all([
+      client.query("SELECT * FROM users ORDER BY created_at ASC"),
+      client.query("SELECT * FROM drivers ORDER BY score DESC"),
+      client.query("SELECT * FROM freights ORDER BY priority DESC"),
+      client.query("SELECT * FROM ports ORDER BY id ASC"),
+      client.query("SELECT * FROM bookings ORDER BY created_at ASC"),
+      client.query("SELECT * FROM lessons ORDER BY stage ASC"),
+      client.query("SELECT * FROM trajectories ORDER BY id ASC"),
+      client.query("SELECT * FROM rating_rules ORDER BY key ASC"),
+      client.query("SELECT * FROM ai_prompts ORDER BY key ASC"),
+      client.query("SELECT * FROM ai_analyses ORDER BY created_at DESC"),
+      client.query("SELECT * FROM freight_decisions ORDER BY created_at ASC"),
+    ]);
 
-  if (userRows.length === 0 || promptRows.length === 0) {
-    const seedStore = buildSeedStore();
-    await persistToPostgres(seedStore);
-    return seedStore;
+    if (userRows.length === 0 || promptRows.length === 0) {
+      const seedStore = buildSeedStore();
+      await persistToPostgres(seedStore);
+      return seedStore;
+    }
+
+    return {
+      users: userRows.map(mapUserRow),
+      drivers: driverRows.map(mapDriverRow),
+      freights: freightRows.map(mapFreightRow),
+      ports: portRows.map(mapPortRow),
+      bookings: bookingRows.map(mapBookingRow),
+      lessons: lessonRows.map(mapLessonRow),
+      trajectories: trajectoryRows.map(mapTrajectoryRow),
+      ratingRules: ruleRows.map(mapRatingRuleRow),
+      aiPrompts: promptRows.map(mapAiPromptRow),
+      aiAnalyses: analysisRows.map(mapAiAnalysisRow),
+      freightDecisions: decisionRows.map(mapDecisionRow),
+    };
+  } catch (error) {
+    console.warn("Postgres unavailable, falling back to seed store:", error instanceof Error ? error.message : error);
+    return buildSeedStore();
   }
-
-  return {
-    users: userRows.map(mapUserRow),
-    drivers: driverRows.map(mapDriverRow),
-    freights: freightRows.map(mapFreightRow),
-    ports: portRows.map(mapPortRow),
-    bookings: bookingRows.map(mapBookingRow),
-    lessons: lessonRows.map(mapLessonRow),
-    trajectories: trajectoryRows.map(mapTrajectoryRow),
-    ratingRules: ruleRows.map(mapRatingRuleRow),
-    aiPrompts: promptRows.map(mapAiPromptRow),
-    aiAnalyses: analysisRows.map(mapAiAnalysisRow),
-    freightDecisions: decisionRows.map(mapDecisionRow),
-  };
 }
 
 async function insertRows(client, table, columns, rows) {
@@ -263,8 +268,8 @@ async function persistToPostgres(store) {
   const client = getPool();
   if (!client) return;
 
-  await client.query("BEGIN");
   try {
+    await client.query("BEGIN");
     await client.query(`
       TRUNCATE TABLE
         ai_analyses,
@@ -329,8 +334,12 @@ async function persistToPostgres(store) {
 
     await client.query("COMMIT");
   } catch (error) {
-    await client.query("ROLLBACK");
-    throw error;
+    try {
+      await client.query("ROLLBACK");
+    } catch {
+      /* ignore rollback errors */
+    }
+    console.warn("Skipping Postgres persist and keeping in-memory demo store:", error instanceof Error ? error.message : error);
   }
 }
 

@@ -4,9 +4,10 @@ import { fileURLToPath } from "node:url";
 import { Pool } from "pg";
 
 const databaseUrl = process.env.DATABASE_URL?.trim();
+const hasValidDatabaseUrl = /^postgres(ql)?:\/\//i.test(databaseUrl ?? "");
 
-if (!databaseUrl) {
-  console.error("DATABASE_URL is required for migrations.");
+if (!hasValidDatabaseUrl) {
+  console.error("DATABASE_URL must be a valid postgres connection string for migrations.");
   process.exit(1);
 }
 
