@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: west-backend
+    env: node
+    branch: main
+    dir: backend
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+
+  - type: static
+    name: west-frontend
+    branch: main
+    dir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: client/dist
+
+# Notes:
+# - Verify `buildCommand` and `staticPublishPath` against `frontend/package.json`.
+# - Add environment variables on Render dashboard or via `render.yaml` secrets.
