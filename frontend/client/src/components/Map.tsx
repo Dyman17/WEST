@@ -16,6 +16,9 @@ interface MapViewProps {
   onLocationSelect?: (location: MapLocation) => void;
 }
 
+const DEFAULT_CENTER: [number, number] = [42.5, 51.5];
+const DEFAULT_ZOOM = 5.2;
+
 function iconForType(type: MapLocation["type"]) {
   return type === "port" ? "⚓" : "⛔";
 }
@@ -156,8 +159,8 @@ function makeMarkerHtml({
 
 export function MapView({
   className,
-  center = [42.5, 51.5],
-  zoom = 5.2,
+  center = DEFAULT_CENTER,
+  zoom = DEFAULT_ZOOM,
   locations = [],
   routes = [],
   locale = "ru",
@@ -172,6 +175,8 @@ export function MapView({
   const animationRef = useRef<number | null>(null);
   const routeMarkersRef = useRef<Record<string, L.Marker>>({});
   const alertedLocationsRef = useRef<Record<string, boolean>>({});
+  const mapCenter = center ?? DEFAULT_CENTER;
+  const mapZoom = zoom ?? DEFAULT_ZOOM;
   const tileLayerUrl = useMemo(
     () => (isDark
       ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
@@ -200,7 +205,7 @@ export function MapView({
         '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">CARTO</a>',
     }).addTo(map);
 
-    map.setView(center, zoom);
+    map.setView(mapCenter, mapZoom);
 
     const observer = new ResizeObserver(() => {
       window.requestAnimationFrame(() => map.invalidateSize());
@@ -214,7 +219,7 @@ export function MapView({
       mapRef.current = null;
       layersRef.current = null;
     };
-  }, [center, tileLayerUrl, zoom]);
+  }, [mapCenter, mapZoom, tileLayerUrl]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -371,8 +376,8 @@ export function MapView({
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    map.setView(center, zoom, { animate: true });
-  }, [center, zoom]);
+    map.setView(mapCenter, mapZoom, { animate: true });
+  }, [mapCenter, mapZoom]);
 
   return <div ref={containerRef} className={cn("w-full h-[500px] rounded-2xl overflow-hidden", className)} />;
 }
