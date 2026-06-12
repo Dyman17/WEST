@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "npm --prefix frontend run build",
+    "dev": "npm --prefix frontend run dev:all",
+    "dev:all": "npm --prefix frontend run dev:all",
+    "start": "npm --prefix frontend run start:all",
+    "start:all": "npm --prefix frontend run start:all",
+    "backend:start": "npm --prefix backend start",
+    "backend:dev": "npm --prefix backend run dev"
+  }
+}
