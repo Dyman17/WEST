@@ -409,7 +409,7 @@ export default function TinderPage() {
       setCards(prev => prev.filter(card => card.id !== currentCard.id));
       await loadCards();
     } catch {
-      toast.error('Не удалось отправить решение на сервер');
+      toast.error('Failed to send the decision to the server');
     }
   };
 
