@@ -1,4 +1,4 @@
-const DEFAULT_BACKEND_URL = "http://localhost:8787";
+const DEFAULT_BACKEND_URL = "https://west-rt9s.onrender.com";
 const TOKEN_KEY = "west-auth-token";
 
 export const BACKEND_URL = (

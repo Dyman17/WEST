@@ -1,5 +1,5 @@
-﻿// WEST вЂ” Neon Transit: Backhaul Page
-// Design: Cyberpunk Terminal вЂ” Eliminate empty return trips
+// WEST ? Neon Transit: Backhaul Page
+// Design: Cyberpunk Terminal ? Eliminate empty return trips
 // Features: Route input, backhaul matches, savings calculator, accept flow
 
 import { useEffect, useState } from 'react';
@@ -46,9 +46,9 @@ export default function BackhaulPage() {
     setAccepted(id);
     const match = matches.find((m) => m.id === id);
     toast.success(
-      lang === 'ru' ? `РћР±СЂР°С‚РЅС‹Р№ РіСЂСѓР· РїСЂРёРЅСЏС‚! +${((match?.price || 0) / 1000).toFixed(0)}K в‚ё` :
-      lang === 'kz' ? `РљРµСЂС– Р¶ТЇРє Т›Р°Р±С‹Р»РґР°РЅРґС‹! +${((match?.price || 0) / 1000).toFixed(0)}K в‚ё` :
-      `Backhaul accepted! +${((match?.price || 0) / 1000).toFixed(0)}K в‚ё`,
+      lang === 'ru' ? `Обратный груз принят! +${((match?.price || 0) / 1000).toFixed(0)}K ₸` :
+      lang === 'kz' ? `Кері жүк қабылданды! +${((match?.price || 0) / 1000).toFixed(0)}K ₸` :
+      `Backhaul accepted! +${((match?.price || 0) / 1000).toFixed(0)}K ₸`,
       { style: { background: isDark ? '#111A2E' : '#fff', border: '1px solid rgba(79,191,159,0.4)', color: '#4FBF9F' } }
     );
   };
@@ -219,7 +219,7 @@ export default function BackhaulPage() {
                       <div className="flex flex-wrap gap-3">
                         {[
                           { icon: Package, value: match.cargo[lang], color: isDark ? '#B8B0A2' : '#5C6B7A' },
-                          { icon: Truck, value: `${(match.weight / 1000).toFixed(0)}С‚`, color: isDark ? '#B8B0A2' : '#5C6B7A' },
+                          { icon: Truck, value: `${(match.weight / 1000).toFixed(0)}т`, color: isDark ? '#B8B0A2' : '#5C6B7A' },
                           { icon: ArrowLeftRight, value: `${match.distance} ${t('common.km')}`, color: isDark ? '#B8B0A2' : '#5C6B7A' },
                           { icon: Clock, value: match.departure, color: isDark ? '#B8B0A2' : '#5C6B7A' },
                         ].map((d, di) => {

@@ -202,8 +202,8 @@ function SwipeCard({
         <div className="grid grid-cols-2 gap-2 mb-3">
           {[
             { icon: Package, label: t('tinder.type'), value: card.cargoType },
-            { icon: Weight, label: t('tinder.weight'), value: `${(card.weight / 1000).toFixed(1)}РЎвЂљ` },
-            { icon: DollarSign, label: t('tinder.price'), value: `${(card.price / 1000).toFixed(0)}K РІвЂљС‘` },
+            { icon: Weight, label: t('tinder.weight'), value: `${(card.weight / 1000).toFixed(1)} ?` },
+            { icon: DollarSign, label: t('tinder.price'), value: `${(card.price / 1000).toFixed(0)}K ?` },
             { icon: Clock, label: t('tinder.departure'), value: card.departure },
           ].map(item => {
             const Icon = item.icon;
@@ -270,7 +270,7 @@ function ListCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5">
             <span style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 700, fontSize: '13px', color: isDark ? '#E6E1D6' : '#1E2A3A' }}>
-              {card.route.from[lang]} РІвЂ вЂ™ {card.route.to[lang]}
+              {card.route.from[lang]} ? {card.route.to[lang]}
             </span>
             {card.isAiMatch && (
               <span style={{ color: '#6FA3FF', fontSize: '10px', fontFamily: "'JetBrains Mono', monospace" }}>
@@ -281,7 +281,7 @@ function ListCard({
           <div className="flex items-center gap-3 text-xs" style={{ color: isDark ? '#B8B0A2' : '#5C6B7A', fontFamily: "'Inter', sans-serif" }}>
             <span>{card.cargoType}</span>
             <span>Р’В·</span>
-            <span>{(card.weight / 1000).toFixed(1)}РЎвЂљ</span>
+            <span>{(card.weight / 1000).toFixed(1)} ?</span>
             <span>Р’В·</span>
             <span>{card.distance} {t('common.km')}</span>
           </div>
@@ -289,7 +289,7 @@ function ListCard({
         <div className="flex items-center gap-3 flex-shrink-0">
           <div className="text-right">
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, fontSize: '14px', color: '#C8A96A' }}>
-              {(card.price / 1000).toFixed(0)}K РІвЂљС‘
+              {(card.price / 1000).toFixed(0)}K ?
             </div>
             <div className="flex items-center gap-0.5 justify-end">
               {Array.from({ length: 5 }).map((_, i) => (
@@ -342,11 +342,26 @@ export default function TinderPage() {
     void syncCards();
     const timer = window.setInterval(() => {
       void syncCards();
-    }, 5000);
+    }, 2000);
+
+    const handleFocus = () => {
+      void syncCards();
+    };
+
+    const handleVisibility = () => {
+      if (!document.hidden) {
+        void syncCards();
+      }
+    };
+
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleVisibility);
 
     return () => {
       cancelled = true;
       window.clearInterval(timer);
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, [loadCards]);
 
@@ -489,7 +504,6 @@ export default function TinderPage() {
       {/* Content */}
       <div className="flex-1 flex">
         {viewMode === 'cards' ? (
-          /* РІвЂќР‚РІвЂќР‚ CARD VIEW РІвЂќР‚РІвЂќР‚ */
           <div className="flex-1 flex flex-col lg:flex-row">
             {/* Card stack */}
             <div className="flex-1 flex flex-col items-center justify-center p-6 relative">
@@ -512,7 +526,7 @@ export default function TinderPage() {
                         {t('tinder.no_more')}
                       </p>
                       <p style={{ fontSize: '13px', color: isDark ? '#B8B0A2' : '#5C6B7A', marginTop: '4px' }}>
-                        {accepted} {t('tinder.accepted').replace('!', '')} Р’В· {rejected} {t('tinder.rejected')}
+                        {accepted} {t('tinder.accepted').replace('!', '')} ? {rejected} {t('tinder.rejected')}
                       </p>
                     </div>
                     <button onClick={handleReset} className="btn-neon px-5 py-2 rounded-lg text-sm flex items-center gap-2">

@@ -337,7 +337,7 @@ export default function BookingPage() {
                   { color: isDark ? '#E6E1D6' : '#1E2A3A', bg: isDark ? '#111A2E' : '#fff', border: isDark ? 'rgba(34,49,79,0.6)' : 'rgba(47,74,109,0.1)', label: { ru: 'Свободно', kz: 'Бос', en: 'Free' } },
                   { color: isDark ? 'rgba(184,176,162,0.4)' : 'rgba(92,107,122,0.4)', bg: 'rgba(224,90,90,0.08)', border: 'rgba(224,90,90,0.2)', label: { ru: 'Занято', kz: 'Бос емес', en: 'Busy' } },
                   { color: '#C8A96A', bg: 'rgba(200,169,106,0.15)', border: 'rgba(200,169,106,0.5)', label: { ru: 'Выбрано', kz: 'Таңдалған', en: 'Selected' } },
-                  { color: '#4FBF9F', bg: 'rgba(79,191,159,0.12)', border: 'rgba(79,191,159,0.4)', label: { ru: '��', kz: '�����', en: 'Mine' } },
+                  { color: '#4FBF9F', bg: 'rgba(79,191,159,0.12)', border: 'rgba(79,191,159,0.4)', label: { ru: '???', kz: '?????', en: 'Mine' } },
                 ].map((l, i) => (
                   <div key={i} className="flex items-center gap-2">
                     <div className="w-8 h-6 rounded text-xs flex items-center justify-center" style={{ background: l.bg, border: `1px solid ${l.border}`, color: l.color, fontFamily: "'JetBrains Mono', monospace", fontSize: '9px' }}>

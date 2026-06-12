@@ -173,8 +173,13 @@ export default function TrackingPage() {
 
     void loadTrajectories();
 
+    const timer = window.setInterval(() => {
+      void loadTrajectories();
+    }, 4000);
+
     return () => {
       cancelled = true;
+      window.clearInterval(timer);
     };
   }, [lang]);
 
@@ -265,7 +270,7 @@ export default function TrackingPage() {
                   <div className="mb-1 flex items-center gap-2">
                     <Icon size={12} style={{ color: isDark ? "#B8B0A2" : "#5C6B7A" }} />
                     <span style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 600, fontSize: "13px" }}>
-                      {order.from[lang]} в†’ {order.to[lang]}
+                      {order.from[lang]} ? {order.to[lang]}
                     </span>
                   </div>
                   <div className="text-xs" style={{ color: isDark ? "#B8B0A2" : "#5C6B7A" }}>
@@ -299,7 +304,7 @@ export default function TrackingPage() {
                   </span>
                 </div>
                 <h2 className="text-xl font-bold" style={{ fontFamily: "'Manrope', sans-serif" }}>
-                  {activeOrder.from[lang]} в†’ {activeOrder.to[lang]}
+                  {activeOrder.from[lang]} ? {activeOrder.to[lang]}
                 </h2>
               </div>
               <div className="flex items-center gap-2 text-xs" style={{ color: isDark ? "#B8B0A2" : "#5C6B7A" }}>

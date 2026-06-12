@@ -160,7 +160,7 @@ export default function CarriersPage() {
 
         {/* Results count */}
         <div className="mb-3 text-xs" style={{ color: isDark ? '#B8B0A2' : '#5C6B7A', fontFamily: "'JetBrains Mono', monospace" }}>
-          {lang === 'ru' ? `${filtered.length} РїРµСЂРµРІРѕР·С‡РёРєРѕРІ` : lang === 'kz' ? `${filtered.length} С‚Р°СЃС‹РјР°Р»РґР°СѓС€С‹` : `${filtered.length} carriers`}
+          {lang === 'ru' ? `${filtered.length} перевозчиков` : lang === 'kz' ? `${filtered.length} тасымалдаушы` : `${filtered.length} carriers`}
         </div>
 
         {/* Carrier grid */}
