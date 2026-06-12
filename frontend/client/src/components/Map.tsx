@@ -29,6 +29,14 @@ function routeIcon(type: MapRoute["transport"]) {
   return "🚛";
 }
 
+function localizedText(
+  value: { ru?: string; kz?: string; en?: string } | undefined,
+  locale: LocaleCode,
+) {
+  if (!value) return "";
+  return value[locale] ?? value.ru ?? value.kz ?? value.en ?? "";
+}
+
 function loadColor(load: number) {
   if (load >= 70) return "#E05A5A";
   if (load >= 40) return "#E0C27A";
@@ -245,7 +253,7 @@ export function MapView({
         icon: L.divIcon({
           className: "west-map-marker",
           html: makeMarkerHtml({
-            label: location.name[locale],
+            label: localizedText(location.name, locale),
             color: loadColor(location.load),
             selected: selectedLocationId === location.id,
             warning: location.load >= 70,
@@ -294,7 +302,7 @@ export function MapView({
 
     routes.forEach((route) => {
       route.path.forEach((point) => allPoints.push(point));
-      const routeLabel = route.name?.[locale] ?? route.id;
+      const routeLabel = localizedText(route.name, locale) || route.id;
 
       const polyline = L.polyline(route.path, {
         color: route.color,
@@ -384,7 +392,7 @@ export function MapView({
       marker.setIcon(L.divIcon({
         className: "west-map-marker",
         html: makeMarkerHtml({
-          label: location.name[locale],
+          label: localizedText(location.name, locale),
           color: loadColor(location.load),
           selected: selectedLocationId === location.id,
           warning: location.load >= 70,

@@ -43,6 +43,15 @@ type TrackingOrder = {
   timeline: Array<{ status: string; time: string; done: boolean }>;
 };
 
+function localizedText(
+  value: Partial<Record<"ru" | "kz" | "en", string>> | string | undefined,
+  lang: "ru" | "kz" | "en",
+) {
+  if (!value) return "";
+  if (typeof value === "string") return value;
+  return value[lang] ?? value.ru ?? value.kz ?? value.en ?? "";
+}
+
 function timelineForStatus(status: string) {
   const steps = [
     { status: "created", time: "08:00", done: true },
@@ -270,11 +279,11 @@ export default function TrackingPage() {
                   <div className="mb-1 flex items-center gap-2">
                     <Icon size={12} style={{ color: isDark ? "#B8B0A2" : "#5C6B7A" }} />
                     <span style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 600, fontSize: "13px" }}>
-                      {order.from[lang]} ? {order.to[lang]}
+                      {localizedText(order.from, lang)} → {localizedText(order.to, lang)}
                     </span>
                   </div>
                   <div className="text-xs" style={{ color: isDark ? "#B8B0A2" : "#5C6B7A" }}>
-                    {order.cargo[lang]}
+                    {localizedText(order.cargo, lang)}
                   </div>
                   <div className="congestion-bar mt-2">
                     <div className="congestion-fill" style={{ width: `${order.progress}%`, background: statusColor }} />
@@ -304,7 +313,7 @@ export default function TrackingPage() {
                   </span>
                 </div>
                 <h2 className="text-xl font-bold" style={{ fontFamily: "'Manrope', sans-serif" }}>
-                  {activeOrder.from[lang]} ? {activeOrder.to[lang]}
+                    {localizedText(activeOrder.from, lang)} → {localizedText(activeOrder.to, lang)}
                 </h2>
               </div>
               <div className="flex items-center gap-2 text-xs" style={{ color: isDark ? "#B8B0A2" : "#5C6B7A" }}>
@@ -326,7 +335,7 @@ export default function TrackingPage() {
 
           <div className="grid gap-3 md:grid-cols-4">
             {[
-              { icon: Package, label: lang === "ru" ? "Груз" : lang === "kz" ? "Жүк" : "Cargo", value: activeOrder.cargo[lang] },
+              { icon: Package, label: lang === "ru" ? "Груз" : lang === "kz" ? "Жүк" : "Cargo", value: localizedText(activeOrder.cargo, lang) },
               { icon: Truck, label: lang === "ru" ? "Перевозчик" : lang === "kz" ? "Тасымалдаушы" : "Carrier", value: activeOrder.carrier },
               { icon: Clock, label: "ETA", value: activeOrder.eta },
               { icon: MapPin, label: lang === "ru" ? "Прогресс" : lang === "kz" ? "Прогресс" : "Progress", value: `${activeOrder.progress}%` },

@@ -165,6 +165,16 @@ function freightScore(freight, filters = {}) {
   let score = freight.priority;
   const reasons = [];
 
+  const createdAt = Date.parse(freight.createdAt ?? "");
+  if (!Number.isNaN(createdAt)) {
+    const ageMinutes = Math.max(0, (Date.now() - createdAt) / 60000);
+    const freshnessBoost = Math.max(0, 40 - ageMinutes * 2);
+    score += freshnessBoost;
+    if (freshnessBoost > 0) {
+      reasons.push("Fresh load");
+    }
+  }
+
   if (filters.transportType) {
     if (normalize(filters.transportType) === normalize(freight.transportType)) {
       score += 15;
@@ -792,6 +802,7 @@ async function handleRequest(request, response) {
       status: "open",
       priority: Number(body.priority ?? Math.min(100, Math.max(50, Math.round(60 + weight * 1.5)))),
       deadline,
+      createdAt: new Date().toISOString(),
     };
 
     store.freights.unshift(freight);

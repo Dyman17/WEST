@@ -219,7 +219,7 @@ export default function DashboardPage() {
   const gridBg = isDark ? 'rgba(34,49,79,0.15)' : 'rgba(47,74,109,0.05)';
   const axisColor = isDark ? '#B8B0A2' : '#5C6B7A';
   const subtitle = generatedAt
-    ? `${lang === 'ru' ? 'Обновлено' : lang === 'kz' ? 'Жаңартылды' : 'Updated'} В· ${new Date(generatedAt).toLocaleString()}`
+    ? `${lang === 'ru' ? 'Обновлено' : lang === 'kz' ? 'Жаңартылды' : 'Updated'} · ${new Date(generatedAt).toLocaleString()}`
     : lang === 'ru'
       ? 'Мангистауская область · 2024'
       : lang === 'kz'

@@ -270,26 +270,26 @@ function ListCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5">
             <span style={{ fontFamily: "'Manrope', sans-serif", fontWeight: 700, fontSize: '13px', color: isDark ? '#E6E1D6' : '#1E2A3A' }}>
-              {card.route.from[lang]} ? {card.route.to[lang]}
+              {card.route.from[lang]} → {card.route.to[lang]}
             </span>
             {card.isAiMatch && (
               <span style={{ color: '#6FA3FF', fontSize: '10px', fontFamily: "'JetBrains Mono', monospace" }}>
-                РІС™РЋ AI
+                AI
               </span>
             )}
           </div>
           <div className="flex items-center gap-3 text-xs" style={{ color: isDark ? '#B8B0A2' : '#5C6B7A', fontFamily: "'Inter', sans-serif" }}>
             <span>{card.cargoType}</span>
-            <span>Р’В·</span>
-            <span>{(card.weight / 1000).toFixed(1)} ?</span>
-            <span>Р’В·</span>
+            <span>·</span>
+            <span>{(card.weight / 1000).toFixed(1)} т</span>
+            <span>·</span>
             <span>{card.distance} {t('common.km')}</span>
           </div>
         </div>
         <div className="flex items-center gap-3 flex-shrink-0">
           <div className="text-right">
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, fontSize: '14px', color: '#C8A96A' }}>
-              {(card.price / 1000).toFixed(0)}K ?
+              {(card.price / 1000).toFixed(0)}K ₸
             </div>
             <div className="flex items-center gap-0.5 justify-end">
               {Array.from({ length: 5 }).map((_, i) => (
@@ -326,7 +326,7 @@ export default function TinderPage() {
     try {
       const { items } = await backend.freightFeed({ limit: 8 });
       const mapped = items.map((freight, index) => freightToCard(freight, index, lang));
-      setCards(mapped);
+      setCards([...mapped].reverse());
     } catch {
       setCards([]);
     }

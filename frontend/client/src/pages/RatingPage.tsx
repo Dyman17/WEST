@@ -198,7 +198,7 @@ export default function RatingPage() {
             { icon: Clock, label: { ru: 'Опоздания', kz: 'Кешігулер', en: 'Late Arrivals' }, effect: '-20%', color: '#E05A5A' },
             { icon: X, label: { ru: 'Отмены', kz: 'Бас тартулар', en: 'Cancellations' }, effect: '-30%', color: '#E05A5A' },
             { icon: Leaf, label: { ru: 'Экологичность', kz: 'Экологиялылық', en: 'Eco Score' }, effect: '+10%', color: '#4FBF9F' },
-            { icon: Star, label: { ru: '??????', kz: '????????', en: 'Reviews' }, effect: '1?5 ?', color: '#C8A96A' },
+            { icon: Star, label: { ru: 'Отзывы', kz: 'Пікірлер', en: 'Reviews' }, effect: '1–5 ★', color: '#C8A96A' },
           ].map((c, i) => {
             const Icon = c.icon;
             return (
