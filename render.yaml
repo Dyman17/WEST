@@ -6,7 +6,8 @@ services:
     branch: main
     dir: backend
     plan: free
-    buildCommand: npm ci && npm run build
+    # Backend has no build step; install deps only
+    buildCommand: npm ci
     startCommand: npm start
     # Add env vars below in Render dashboard or convert to secrets here.
     # envVars:
@@ -20,9 +21,10 @@ services:
     branch: main
     dir: frontend
     plan: free
+    # Install deps and run the frontend build
     buildCommand: npm ci && npm run build
-    # Adjust the publish path after running your frontend build
-    staticPublishPath: client/dist
+    # Vite outputs to `dist/public` per `vite.config.ts`
+    staticPublishPath: dist/public
 
 # TODO:
 # - Replace `buildCommand` and `staticPublishPath` with values from
