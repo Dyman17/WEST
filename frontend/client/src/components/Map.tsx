@@ -173,6 +173,7 @@ export function MapView({
   const mapRef = useRef<L.Map | null>(null);
   const layersRef = useRef<L.LayerGroup | null>(null);
   const animationRef = useRef<number | null>(null);
+  const locationMarkersRef = useRef<Record<string, L.Marker>>({});
   const routeMarkersRef = useRef<Record<string, L.Marker>>({});
   const alertedLocationsRef = useRef<Record<string, boolean>>({});
   const mapCenter = center ?? DEFAULT_CENTER;
@@ -232,6 +233,7 @@ export function MapView({
     }
 
     layers.clearLayers();
+    locationMarkersRef.current = {};
     routeMarkersRef.current = {};
 
     const allPoints: Array<[number, number]> = [];
@@ -257,6 +259,7 @@ export function MapView({
 
       marker.on("click", () => onLocationSelect?.(location));
       marker.addTo(layers);
+      locationMarkersRef.current[location.id] = marker;
 
       if (location.load >= 70 && !alertedLocationsRef.current[location.id]) {
         alertedLocationsRef.current[location.id] = true;
@@ -371,7 +374,28 @@ export function MapView({
         animationRef.current = null;
       }
     };
-  }, [locale, locations, onLocationSelect, routes, selectedLocationId]);
+  }, [locale, locations, onLocationSelect, routes]);
+
+  useEffect(() => {
+    Object.entries(locationMarkersRef.current).forEach(([locationId, marker]) => {
+      const location = locations.find((item) => item.id === locationId);
+      if (!location) return;
+
+      marker.setIcon(L.divIcon({
+        className: "west-map-marker",
+        html: makeMarkerHtml({
+          label: location.name[locale],
+          color: loadColor(location.load),
+          selected: selectedLocationId === location.id,
+          warning: location.load >= 70,
+          type: location.type,
+        }),
+        iconSize: [40, 40],
+        iconAnchor: [20, 20],
+        popupAnchor: [0, -16],
+      }));
+    });
+  }, [locale, locations, selectedLocationId]);
 
   useEffect(() => {
     const map = mapRef.current;
